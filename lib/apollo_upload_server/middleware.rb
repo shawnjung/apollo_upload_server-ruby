@@ -12,8 +12,8 @@ module ApolloUploadServer
 
       if env['CONTENT_TYPE'].to_s.include?('multipart/form-data') && params['operations'].present? && params['map'].present?
         result = GraphQLDataBuilder.new.call(request.params)
-        result&.each do |key, value|
-          request.update_param(key, value)
+        result.each do |key, value|
+          request.request_parameters[key] = value
         end
       end
 
