@@ -7,13 +7,13 @@ module ApolloUploadServer
     end
 
     def call(env)
-      params = env['action_dispatch.request.request_parameters']
-
-      if env['CONTENT_TYPE'].to_s.include?('multipart/form-data') && params['operations'].present? && params['map'].present?
+      if env['CONTENT_TYPE'].to_s.include?('multipart/form-data')
         request = ActionDispatch::Request.new(env)
-        result = GraphQLDataBuilder.new.call(request.params)
-        result.each do |key, value|
-          request.request_parameters[key] = value
+        if request.params['operations'].present? && request.params['map'].present?
+          result = GraphQLDataBuilder.new.call(request.params)
+          result.each do |key, value|
+            request.request_parameters[key] = value
+          end
         end
       end
 
